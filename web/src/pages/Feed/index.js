@@ -27,8 +27,6 @@ export default function Feed() {
       },
       [feed]
     );
-  });
-  useEffect(() => {
     loadPost(
       newPost => {
         setFeed([newPost, ...feed]);
