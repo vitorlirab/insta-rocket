@@ -40,6 +40,7 @@ module.exports = {
     'no-param-reassign': 'off',
     'no-console': 'off',
     'no-underscore-dangle':'off',
-    'no-use-before-define':'off'
+    'no-use-before-define':'off',
+    'no-undef':'off'
   },
 };

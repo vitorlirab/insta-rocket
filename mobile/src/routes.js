@@ -11,13 +11,22 @@ import logo from './assets/logo.png';
 export default createAppContainer(
   createStackNavigator(
     {
-      Feed,
-      New,
+      Feed: {
+        screen: Feed,
+        navigationOptions: {
+          headerTitle: () => <Image source={logo} />,
+        },
+      },
+      New: {
+        screen: New,
+        navigationOptions: {
+          headerTitle: 'Nova Publicação',
+        },
+      },
     },
     {
       defaultNavigationOptions: {
         headerTintColor: '#000',
-        headerTitle: () => <Image source={logo} />,
         headerTitleAlign: 'center',
         headerBackTitle: null,
       },

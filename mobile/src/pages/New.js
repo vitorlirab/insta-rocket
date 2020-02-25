@@ -9,13 +9,15 @@ import {
   Image,
 } from 'react-native';
 
-export default function New() {
+import api from '../services/api';
+
+export default function New({navigation}) {
   const [author, setAuthor] = useState([]);
   const [place, setPlace] = useState([]);
   const [description, setDescription] = useState([]);
   const [hashtags, setHashtags] = useState([]);
-  const [previews, setPreviews] = useState([]);
-  const [images, setImages] = useState([]);
+  const [previews, setPreviews] = useState(null);
+  const [images, setImages] = useState(null);
 
   function handleSelectImage() {
     ImagePicker.showImagePicker(
@@ -43,10 +45,24 @@ export default function New() {
             name: `${prefix}.${ext}`,
           };
           setPreviews(preview);
+          setImages(image);
         }
       }
     );
   }
+
+  async function handleSubmit() {
+    const data = new FormData();
+
+    data.append('image', images);
+    data.append('author', author);
+    data.append('place', place);
+    data.append('description', description);
+    data.append('hashtags', hashtags);
+
+    await api.post('/posts', data);
+  }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.selectButton} onPress={handleSelectImage}>
@@ -60,7 +76,7 @@ export default function New() {
         placeholder="Nome do autor"
         placeholderTextColor="#999"
         value={author}
-        onChange={e => setAuthor(e)}
+        onChange={e => setAuthor(e.nativeEvent.text)}
       />
       <TextInput
         style={styles.input}
@@ -69,16 +85,16 @@ export default function New() {
         placeholder="Local"
         placeholderTextColor="#999"
         value={place}
-        onChange={e => setPlace(e)}
+        onChange={e => setPlace(e.nativeEvent.text)}
       />
       <TextInput
         style={styles.input}
         autoCorrect={false}
         autoCapitalize="none"
-        placeholder="Drescição"
+        placeholder="Descrição"
         placeholderTextColor="#999"
         value={description}
-        onChange={e => setDescription(e)}
+        onChange={e => setDescription(e.nativeEvent.text)}
       />
       <TextInput
         style={styles.input}
@@ -87,19 +103,21 @@ export default function New() {
         placeholder="Hashtags"
         placeholderTextColor="#999"
         value={hashtags}
-        onChange={e => setHashtags(e)}
+        onChange={e => setHashtags(e.nativeEvent.text)}
       />
-      <TouchableOpacity style={styles.shareButton} onPress={() => {}}>
+      <TouchableOpacity
+        style={styles.shareButton}
+        onPress={
+          (handleSubmit,
+          () => {
+            navigation.navigate('Feed');
+          })
+        }>
         <Text style={styles.shareButtonText}>Compartilhar</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
-New.navigationOptions = () => ({
-  headerTitle: 'Nova Publicação',
-  headerTitleAlign: 'center',
-});
 
 const styles = StyleSheet.create({
   container: {
